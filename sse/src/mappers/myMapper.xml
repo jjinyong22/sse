@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers.myMapper">
+<select id = "getCartList" parameterType = "String"
+	resultType = "model.Cart">
+		select * from cart where cart_id = #{id} order by cart_num asc
+	</select>
+	
+	<select id = "getMaxCartNum" parameterType = "String"
+	resultType ="Integer">
+		select count(*) from cart where cart_id = #{id}
+	</select>
+	
+	<insert id ="addCart" parameterType ="model.Cart">
+		insert into cart values(#{cart_id}, #{cart_code}, #{cart_num}, #{cart_count}, #{cart_color},
+						#{cart_image}, #{cart_name}, #{cart_price})
+	</insert>
+	
+	<update id ="updateCart" parameterType = "model.Cart">
+		update cart set cart_count = cart_count + #{cart_count} where cart_code=#{cart_code} and cart_id=#{cart_id}
+	</update>
+	
+	<update id = "countUpdate" parameterType = "model.Cart">
+		update cart set cart_count = #{cart_count} where cart_id = #{cart_id} and cart_code = #{cart_code} and cart_color = #{cart_color}
+	</update>
+	
+	<delete id = "deleteCart" parameterType = "model.Cart">
+		delete from cart where cart_id=#{cart_id} and cart_code=#{cart_code} and cart_color=#{cart_color}
+	</delete>
+	<!-- END CART -->
+	
+	<!-- BEGIN CACHE -->
+	<select id = "getMaxCacheNum" resultType = "Integer">
+		select count(*) from cache
+	</select>
+	
+	<update id="userMileage" parameterType = "model.Customer">
+		update customer set user_mileage = user_mileage + #{user_mileage} where user_id = #{user_id}
+	</update>
+	
+	<update id="userMileage2" parameterType="model.Customer">
+		update customer set user_mileage = user_mileage - #{user_mileage} where user_id = #{user_id}
+	</update>
+	
+	<insert id="insertCache" parameterType = "model.Cache">
+		insert into cache values(#{cache_id}, #{cache_code}, #{cache_num}, #{cache_count},
+								#{cache_date}, #{cache_color}, #{cache_state}, #{cache_price}, #{cache_image}, #{cache_size},#{cache_name})
+	</insert>
+
+<!-- 구매내역보기 -->
+	<select id="Purchase" parameterType="String" resultType="model.Cache">
+		select * from cache where cache_id = #{cache_id} order by cache_num desc
+	</select>
+	<select id="PurchaseAll" resultType="model.Cache">
+		select * from cache order by cache_num desc
+	</select>
+	<delete id ="removeCache" parameterType = "Integer">
+		delete from cache where cache_num = #{num}
+	</delete>
+	<update id = "changeNum" parameterType = "Integer">
+		update cache set cache_num = cache_num - 1 where cache_num > #{num}
+	</update>
+	
+	<update id="updatestate" parameterType="model.Cache">
+		update cache set cache_state = #{cache_state} where cache_id =#{cache_id} and cache_code=#{cache_code}
+	</update>
+<!-- 구매내역보기 -->
+
+<!-- 상품 -->
+<select id = "itemView2" resultType = "model.Item">
+		select * from item order by item_code desc
+	</select>
+<select id = "getReply" parameterType = "model.GetReply"
+	resultType = "model.Reply">
+		select * from reply where reply_type = #{type} and reply_code = #{code}
+	</select>
+	
+	<insert id = "setReply" parameterType = "model.Reply">
+		insert into reply values(#{reply_type},#{reply_code},#{reply_number},#{reply_id},#{reply_content}
+								,#{reply_date},#{reply_image},#{groupid},#{parentid},#{order})
+	</insert>
+	
+	<select id = "getMaxNum" parameterType = "model.GetReply"
+	resultType = "Integer">
+		select max(reply_number) from reply where reply_type=#{type} and reply_code = #{code}
+	</select>
+	
+	<delete id = "removeReply" parameterType = "model.GetReply">
+		delete from reply where reply_type = #{type} and reply_code = #{code} and reply_number = #{number}
+	</delete>
+	
+	<select id = "maxCode" resultType ="Integer">
+		select max(item_code) from item
+	</select>
+	
+	<insert id="addItem" parameterType = "model.Item">
+		insert into item values(#{item_code},#{item_type},#{item_name},#{item_price},#{item_image},#{item_sale},#{item_info},#{item_gender},#{item_size} )
+	</insert>
+	
+	<insert id="addItemcount" parameterType = "model.Item_count">
+		insert into item_count values(#{item_count_code}, #{item_count_count}, #{item_count_color})
+	</insert>
+	
+	<insert id="addItemadd" parameterType = "model.Item_add">
+		insert into item_add values(#{item_add_code}, #{item_add_image})
+	</insert>
+	
+	<delete id = "deleteItem" parameterType = "Integer">
+		delete from item where item_code = #{code}
+	</delete>
+	
+	<delete id ="deleteItem_add" parameterType = "Integer">
+		delete from item_add where item_add_code = #{code}
+	</delete>
+	
+	<delete id = "deleteItem_count" parameterType = "Integer">
+		delete from item_count where item_count_code = #{code}
+	</delete>
+	
+	<update id = "updateItem" parameterType = "model.Item">
+		update item set item_type = #{item_type}, item_name = #{item_name}, item_price = #{item_price},
+						item_image = #{item_image}, item_sale=#{item_sale}, item_info = #{item_info},
+						item_gender = #{item_gender}, item_size = #{item_size}
+					where item_code = #{item_code}
+	</update>
+	
+	<update id = "updateItem_add" parameterType = "model.Item_add">
+		update item_add set item_add_image = #{item_add_image} where item_add_code = #{item_add_code}
+	</update>
+	<select id = "itemView" parameterType = "String"
+	resultType = "model.Item">
+		select * from item where item_type = #{type} order by item_code desc
+	</select>
+	
+	<select id="getItem" parameterType = "Integer"
+	resultType ="model.Item">
+		select * from item where item_code = #{code}
+	</select>
+	
+	<select id = "getItemAdd" parameterType = "Integer"
+	resultType = "model.Item_add">
+		select * from item_add where item_add_code = #{code}
+	</select>
+	
+	<select id = "getItemCount" parameterType = "Integer"
+	resultType ="model.Item_count">
+		select * from item_count where item_count_code = #{code}
+	</select>
+	<select id="colorCount" parameterType="model.Cache" resultType="Integer">
+		select item_count_count from item_count where item_count_code=#{cache_code} and item_count_color=#{cache_color}
+	</select>
+	
+	<update id="consumeCount" parameterType="model.Cache">
+		update item_count set item_count_count = item_count_count - #{cache_count}  where item_count_code=#{cache_code} 
+	</update>
+	
+<!-- 상품 -->
+
+<!-- 검색 -->
+	<select id="searchitem" resultType="model.Item" 
+	parameterType="String">
+		select * from item
+		where item_name like '%' || #{search} || '%' or item_info like '%' || #{search} || '%'
+	</select>
+	<select id="searchcache" resultType="model.Cache" parameterType="String">
+		select * from cache
+		where cache_id like '%' || #{search} || '%' or cache_date like '%' || #{search} || '%' or cache_name like '%' || #{search} || '%'
+		or cache_size like '%' || #{search} || '%' or cache_state like '%' || #{search} || '%'
+	</select>	
+<!-- 검색 -->
+<!-- 큐앤에이 -->
+	<select id="notice" parameterType="String" resultType="model.QnA">
+	select * from qna where qna_id = #{notice} and qna_image = 'normal' order by qna_number asc
+	</select>
+	<select id="listDetail" parameterType="model.QnA"
+	resultType="model.QnA">
+	select * from qna where qna_number=#{qna_number} and order_no=#{order_no} and group_id=#{group_id} and parent_id=#{parent_id}
+	</select>
+	
+	<select id="getQnADetail"
+	resultType="model.QnA">
+	select * from qna where qna_number=#{qna_number}
+	</select>
+
+	<update id="updateOrderNoReply" parameterType="model.QnA">
+		update qna set order_no = order_no + 1
+		where group_id = #{group_id} and order_no >= #{order_no}
+	</update>
+	
+	<select id="selectMaxGroupnumber" resultType="Integer">
+		select max(group_id) max_Id from qna
+	</select>
+	
+	<update id="updateQnAInfo" parameterType="model.QnA">
+		update qna set qna_title=#{qna_title},
+		qna_content=#{qna_content}, qna_date=#{qna_date}
+		 where qna_number=#{qna_number}
+	</update>
+	
+	<delete id="deleteQnA" parameterType="Integer">
+		delete from qna where qna_number=#{qna_number}
+	</delete>
+	
+	<insert id="insertQnA" parameterType="model.QnA">
+		insert into qna values(#{qna_number},
+		#{qna_title},#{qna_content},#{qna_id},
+		#{qna_date},#{qna_image},
+		#{group_id},#{order_no},#{parent_id})
+	</insert>
+
+	<select id="getMaxQnAnumber" resultType="Integer">
+		select max(qna_number) max_id from qna
+	</select>
+	
+	<select id="getQnAInfo" parameterType="model.Condition"
+		resultType="model.QnA">
+		select * from (
+			select a.*, rownum rn from (
+				(
+					select * from qna where qna_image != 'normal'
+					order by group_id desc, order_no asc
+				)a
+			)
+		) where rn between #{startRow} and #{endRow} 
+	</select>
+
+	<select id="selectmyquestion" parameterType="model.Condition" resultType="model.QnA">
+	select * from (
+			select a.*, rownum rn from (
+				(
+					select * from qna where group_id in (select distinct group_id from qna where qna_id = #{qna_id})
+					order by group_id desc, order_no asc
+				)a
+			)
+		) where rn between #{startRow} and #{endRow} and qna_id != 'normal'
+	</select>
+	
+
+	<select id="selectImageCount" resultType="Integer">
+		select count(*) from qna where qna_image != 'normal'
+	</select>
+	
+	<select id="selectImageCountMy" parameterType="String" resultType="Integer">
+		select count(*) from qna where group_id in (select distinct group_id from qna where qna_id = #{qna_id} and qna_id != 'normal')
+	</select>
+	
+	<select id="selectReplyPages" parameterType="Integer" resultType="Integer">
+      select rn from(
+         select a.*, rownum rn from (
+            (
+               select * from qna
+               order by group_id desc, order_no asc
+            )a
+         )
+      ) where qna_number = #{qna_number}
+	</select>
+
+		
+<!-- 큐앤에이 -->
+
+	<select id="checkId" parameterType="String" resultType="Integer">
+		select count(*) as cnt from customer where user_id=#{user_id}
+	</select>
+	
+	<select id="getPassword" resultType="String" parameterType="String">
+		select password from customer where user_id = #{user_id}
+	</select>
+	
+	<select id="getUser" resultType="model.Customer" parameterType="String">
+		select *
+		from customer where user_id = #{user_id}
+	</select>
+	
+	<update id="updateUser" parameterType="model.Customer">
+		update customer set user_id=#{user_id},	user_password=#{user_password},
+		user_name=#{user_name},	user_address=#{user_address},
+		user_rn=#{user_rn},	user_gender=#{user_gender},
+		user_phone=#{user_phone},	user_email=#{user_email},
+		user_question=#{user_question},	user_answer=#{user_answer},
+		user_date=#{user_date}, user_mileage=#{user_mileage}
+		 where user_id=#{user_id}
+	</update>
+	
+	<insert id="insertCustomer" parameterType="model.Customer">
+		insert into customer(user_id,user_password,user_name,user_address,user_rn,
+		user_gender,user_phone,user_email,user_mileage,user_question,user_answer,user_date) 
+		values(#{user_id},#{user_password},#{user_name},#{user_address},
+		#{user_rn},#{user_gender},#{user_phone},#{user_email},#{user_mileage},#{user_question},
+		#{user_answer},#{user_date}) 
+	</insert>
+	
+	<select id = "checkLogin" parameterType = "model.Customer"
+	resultType = "model.Customer">
+		select * from customer where user_id = #{user_id} and user_password = #{user_password} 
+	</select>
+	
+		<select id = "findAllLB" resultType = "model.Lookbook">
+		select * from lookbook order by lb_order desc
+	</select>
+	<select id = "findNumLB" parameterType = "Integer"
+	resultType = "model.Lookbook">
+		select * from lookbook where lb_order = #{num}
+	</select>
+	<insert id = "insertLB" parameterType = "model.Lookbook">
+		insert into lookbook values(#{lb_order}, #{lb_image}, #{lb_title})
+	</insert>
+	<update id="updateLB" parameterType = "model.Lookbook">
+		update lookbook set lb_image = #{lb_image} where lb_order = #{lb_order}
+	</update>
+	<delete id = "deleteLB" parameterType = "Integer">
+		delete from lookbook where lb_order = #{num}
+	</delete>
+	<update id="numSetting" parameterType = "Integer">
+		update lookbook set lb_order = lb_order-1 where lb_order <![CDATA[>]]> #{num}
+	</update>
+		<select id = "lb_maxNum" resultType ="Integer">
+		select count(*) from lookbook
+	</select>
+	<select id = "managerLogin" parameterType = "model.Manager"
+	resultType = "model.Manager">
+		select * from manager where manager_id = #{manager_id} and manager_password = #{manager_password}
+	</select>
+	
+</mapper>
+
+
+
+
